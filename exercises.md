@@ -18,10 +18,8 @@ Gọi `call_openai` với temperature 0.0, 0.5, 1.0 và 1.5 dùng prompt
 **Bạn nhận thấy quy luật gì qua bốn phản hồi?** (2–3 câu)
 
 > _Câu trả lời của bạn_
-> Ở temperature 0.0, phản hồi thường ổn định, súc tích, đi thẳng vào vấn đề của câu hỏi, chạy lại nhiều lần cũng ra gần giống nhau.
-> Ở 0.5, câu chữ bắt đầu đa dạng hơn một chút về cách diễn đạt, nhưng nội dung sự thật được chọn vẫn khá chuẩn, ít khi lạcđề.
-> Ở 1.0, model trả về response có cách hành văn cũng tự sáng tạo hơn, đôi khi thêm chi tiết phụ hoặc bình luận ngoài lề.
-> Ở 1.5, câu văn lủng củng, lặp từ, hoặc pha trộn thông tin không liên quan.
+> Ở temperature 0.0, phản hồi thường ổn định, súc tích và gần giống nhau giữa các lần chạy; khi tăng lên 0.5 và 1.0, cách diễn đạt trở nên đa dạng và sáng tạo hơn, đôi khi có thêm các chi tiết phụ. Ở temperature 1.5, mức ngẫu nhiên cao hơn khiến phản hồi dễ xuất hiện câu chữ kém mạch lạc, lặp lại hoặc thông tin ít liên quan hơn. Nhìn chung, temperature càng cao thì độ đa dạng tăng nhưng tính ổn định và nhất quán có xu hướng giảm.
+
 
 ### Câu 1.2 — Chọn temperature cho sản phẩm
 
