@@ -100,7 +100,7 @@ với delay cố định giống nhau?**
 
 > _Câu trả lời của bạn_
 
-## Delay cố định khiến hàng nghìn client cùng gặp lỗi sẽ đồng loạt retry ở đúng cùng một thời điểm (ví dụ sau 1 giây), tạo ra một đợt sóng request y hệt đợt đầu dội thẳng vào server ngay khi nó vừa có cơ hội hồi phục, khiến sự cố lặp lại theo chu kỳ. So với delay cố định, exponential backoff tăng dần thời gian chờ sau mỗi lần thất bại, giúp giảm tần suất retry và cho API thêm thời gian phục hồi khi đang quá tải. Nếu hàng nghìn client cùng sử dụng delay cố định, chúng có thể retry đồng loạt sau cùng một khoảng thời gian và tạo ra một đợt tải lớn mới, khiến server tiếp tục quá tải. Tuy nhiên, exponential backoff một mình vẫn có thể khiến các client retry đồng bộ, vì vậy trong hệ thống thực tế thường kết hợp thêm **jitter** — một khoảng trễ ngẫu nhiên — để phân tán request theo thời gian.
+> Delay cố định khiến hàng nghìn client cùng gặp lỗi sẽ đồng loạt retry ở đúng cùng một thời điểm (ví dụ sau 1 giây), tạo ra một đợt sóng request y hệt đợt đầu dội thẳng vào server ngay khi nó vừa có cơ hội hồi phục, khiến sự cố lặp lại theo chu kỳ. So với delay cố định, exponential backoff tăng dần thời gian chờ sau mỗi lần thất bại, giúp giảm tần suất retry và cho API thêm thời gian phục hồi khi đang quá tải. Nếu hàng nghìn client cùng sử dụng delay cố định, chúng có thể retry đồng loạt sau cùng một khoảng thời gian và tạo ra một đợt tải lớn mới, khiến server tiếp tục quá tải. Tuy nhiên, exponential backoff một mình vẫn có thể khiến các client retry đồng bộ, vì vậy trong hệ thống thực tế thường kết hợp thêm **jitter** — một khoảng trễ ngẫu nhiên — để phân tán request theo thời gian.
 
 ## Block 4 — Mini-Project (trả lời sau Checkpoint 4)
 
@@ -130,7 +130,7 @@ thiện cụ thể và mô tả ngắn cách triển khai:**
 
 > _Câu trả lời của bạn_
 
-## Hạn chế lớn nhất của trợ lý hiện tại là history bị cắt cứng còn 3 lượt mà không phân biệt thông tin quan trọng hay không, nên nếu khách nêu một chi tiết cần nhớ (như mã đơn hàng) ở đầu cuộc trò chuyện, nó sẽ biến mất khỏi ngữ cảnh sau vài lượt và khách phải lặp lại. Cải thiện đề xuất là tách riêng một "bộ nhớ ngắn hạn" (`session_facts`) không bị xén: sau mỗi lượt, dùng `call_openai_mini` để trích xuất nhanh các thông tin đáng nhớ từ tin nhắn khách thành JSON, gộp vào `session_facts`, rồi chèn thông tin này vào một system message riêng (đặt ngoài phần history bị cắt, giống cách persona luôn được giữ lại) khi gọi model chính. Cách này tốn thêm một lời gọi API rẻ mỗi lượt nhưng đảm bảo các chi tiết định danh quan trọng không bị mất dù hội thoại kéo dài.
+> Hạn chế lớn nhất của trợ lý hiện tại là history bị cắt cứng còn 3 lượt mà không phân biệt thông tin quan trọng hay không, nên nếu khách nêu một chi tiết cần nhớ (như mã đơn hàng) ở đầu cuộc trò chuyện, nó sẽ biến mất khỏi ngữ cảnh sau vài lượt và khách phải lặp lại. Cải thiện đề xuất là tách riêng một "bộ nhớ ngắn hạn" (`session_facts`) không bị xén: sau mỗi lượt, dùng `call_openai_mini` để trích xuất nhanh các thông tin đáng nhớ từ tin nhắn khách thành JSON, gộp vào `session_facts`, rồi chèn thông tin này vào một system message riêng (đặt ngoài phần history bị cắt, giống cách persona luôn được giữ lại) khi gọi model chính. Cách này tốn thêm một lời gọi API rẻ mỗi lượt nhưng đảm bảo các chi tiết định danh quan trọng không bị mất dù hội thoại kéo dài.
 
 ## Danh Sách Kiểm Tra Nộp Bài
 
