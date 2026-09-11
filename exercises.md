@@ -18,6 +18,7 @@ Gọi `call_openai` với temperature 0.0, 0.5, 1.0 và 1.5 dùng prompt
 **Bạn nhận thấy quy luật gì qua bốn phản hồi?** (2–3 câu)
 
 > _Câu trả lời của bạn_
+
 > Ở temperature 0.0, phản hồi thường ổn định, súc tích và gần giống nhau giữa các lần chạy; khi tăng lên 0.5 và 1.0, cách diễn đạt trở nên đa dạng và sáng tạo hơn, đôi khi có thêm các chi tiết phụ. Ở temperature 1.5, mức ngẫu nhiên cao hơn khiến phản hồi dễ xuất hiện câu chữ kém mạch lạc, lặp lại hoặc thông tin ít liên quan hơn. Nhìn chung, temperature càng cao thì độ đa dạng tăng nhưng tính ổn định và nhất quán có xu hướng giảm.
 
 
@@ -26,6 +27,7 @@ Gọi `call_openai` với temperature 0.0, 0.5, 1.0 và 1.5 dùng prompt
 **Bạn sẽ đặt temperature bao nhiêu cho chatbot hỗ trợ khách hàng, và tại sao?**
 
 > _Câu trả lời của bạn_
+
 > Với chatbot hỗ trợ khách hàng, em sẽ đặt temperature thấp, khoảng 0.3 vì độ chính xác quan trọng hơn sáng tạo. Khách hỏi về chính sách đổi trả, giá cước, hướng dẫn sử dụng... thì câu trả lời cần nhất quán và đúng, không cần sáng tạo hay diễn đạt mới lạ mỗi lần. Nếu hai khách hàng hỏi cùng một câu, temperature thấp giúp họ nhận được câu trả lời tương tự nhau — tránh tình huống một người được thông tin A, người khác lại nhận thông tin có sắc thái khác dù cùng một chính sách. Đồng thời làm giảm rủi ro hallucination, temperature cao làm tăng khả năng model bịa thông tin (sai chính sách, sai số liệu). 0.0 tuyệt đối đôi khi hơi máy móc. Một chút temperature (0.3) vẫn giữ được sự linh hoạt nhẹ trong cách diễn đạt (để câu trả lời không lặp lại y hệt như robot), mà không đánh đổi độ chính xác.
 
 ### Câu 1.3 — Đánh đổi chi phí
@@ -37,6 +39,7 @@ mỗi lần trung bình ~350 token đầu ra.
 trường hợp GPT-4o xứng đáng với chi phí và một trường hợp nên dùng mini:**
 
 > _Câu trả lời của bạn_
+
 > Ước tính chi phí (chỉ tính phần output, vì đề bài chỉ cho token đầu ra):
 
 Tổng token/ngày = 10.000 người × 3 lần × 350 token = 10.500.000 token = 10.500 (nghìn token)
@@ -61,6 +64,7 @@ Gọi `chat_with_system_prompt` hai lần với cùng câu hỏi
 ảnh hưởng đến hành vi model ra sao?** (3–4 câu)
 
 > _Câu trả lời của bạn_
+
 > Với persona "giáo viên tiểu học", phản hồi thường ngắn hơn, dùng từ vựng đơn giản, tránh thuật ngữ kỹ thuật (thay "mã hóa", "phi tập trung" bằng ví dụ đời thường như "cuốn sổ mà ai cũng có một bản giống hệt nhau"), và hay dùng ví dụ cụ thể, gần gũi để minh họa. Với persona "chuyên gia tài chính", phản hồi thường dài và dày đặc thuật ngữ hơn (consensus, hash, sổ cái phân tán, smart contract), đi thẳng vào ứng dụng tài chính (giao dịch, DeFi, tính minh bạch).
 
 > Điều này cho thấy system prompt không thay đổi sự thật mà model biết, mà thay đổi cách trình bày: nó định hình giọng văn, mức độ trừu tượng, và loại ví dụ được chọn vì system message được model coi là vai trò chỉ dẫn xuyên suốt, chi phối cách nó lọc và diễn đạt lại cùng một kiến thức nền cho từng đối tượng khác nhau.
@@ -74,6 +78,7 @@ Chọn một đoạn văn tiếng Việt ~100 từ. So sánh số token theo `co
 nhiều token hơn tiếng Anh cùng độ dài?**
 
 > _Câu trả lời của bạn_
+
 > Token thật (tiktoken): 116
 > Ước lượng theo Part 1 (số từ / 0,75): 99 / 0,75 ≈ 132
 > Ước lượng theo ký tự/4 (Task 2.1 fallback): 190
@@ -90,6 +95,7 @@ nhiều token hơn tiếng Anh cùng độ dài?**
 non-streaming lại phù hợp hơn?** (1 đoạn văn)
 
 > _Câu trả lời của bạn_
+
 > Streaming quan trọng nhất trong các ứng dụng cần **phản hồi theo thời gian thực** như chatbot, trợ lý AI hoặc hệ thống sinh nội dung dài, vì người dùng có thể thấy kết quả từng phần ngay khi model tạo ra thay vì phải chờ toàn bộ phản hồi hoàn tất, từ đó cải thiện trải nghiệm và giảm cảm giác độ trễ. Ngược lại, **non-streaming** phù hợp hơn khi ứng dụng cần nhận **toàn bộ kết quả trước khi xử lý**, chẳng hạn phân tích dữ liệu, tạo JSON có cấu trúc, lưu phản hồi vào cơ sở dữ liệu, kiểm tra nội dung hoặc thực hiện các tác vụ tự động phía backend, vì cách này đơn giản hơn trong việc xử lý và kiểm tra kết quả hoàn chỉnh.
 
 ### Câu 3.2 — Vì sao backoff theo cấp số nhân?
@@ -111,11 +117,13 @@ thích 1–2 lựa chọn từ ngữ quan trọng trong prompt (ví dụ: vì sa
 "trả lời ngắn gọn", vì sao chỉ định ngôn ngữ...):**
 
 > _Câu trả lời của bạn_
+
 > System prompt: "Bạn là trợ lý chăm sóc khách hàng của một cửa hàng bán đồ gia dụng trực tuyến.
 > Trả lời bằng tiếng Việt, ngắn gọn, tối đa 3-4 câu mỗi lượt.
 > Nếu không chắc chắn về thông tin (giá, tồn kho, chính sách đổi trả), hãy nói rõ
 > là cần xác nhận thêm thay vì đoán.
 > Giữ giọng điệu thân thiện, lịch sự, xưng "mình" và gọi khách là "bạn"."
+
 > Giải thích:
 > "Trả lời bằng tiếng Việt" — chỉ định rõ ràng thay vì để model tự suy ra từ ngôn ngữ của câu hỏi. Nếu khách gõ nhầm tiếng Anh xen tiếng Việt, hoặc câu hỏi ngắn/mơ hồ, model có thể "đoán sai" ngôn ngữ phản hồi nếu không có chỉ định tường minh."
 > "Ngắn gọn, tối đa 3-4 câu" — không chỉ để tiết kiệm chi phí (ít token output hơn = rẻ hơn), mà còn vì hành vi thực tế của người dùng CSKH: họ đọc lướt, muốn câu trả lời nhanh, không muốn đọc một đoạn văn dài như bài luận cho một câu hỏi đơn giản như "cái này còn hàng không ạ?".
