@@ -79,8 +79,13 @@ nhiều token hơn tiếng Anh cùng độ dài?**
 > Token thật (tiktoken): 116
 > Ước lượng theo Part 1 (số từ / 0,75): 99 / 0,75 ≈ 132
 > Ước lượng theo ký tự/4 (Task 2.1 fallback): 190
-> Chênh lệch với ước lượng ký tự/4: (132 - 116) / 116 × 100≈ 13.8%
-> Vì sao tiếng Việt tốn nhiều token hơn: Tiếng Việt có thể cần nhiều token hơn tiếng Anh có độ dài tương đương vì tokenizer chia văn bản thành các token/subword dựa trên những mẫu ký tự đã học; các từ và âm tiết tiếng Việt có dấu hoặc ít xuất hiện trong vocabulary có thể bị tách thành nhiều token hơn. Vì vậy, đếm số từ rồi quy đổi bằng một tỷ lệ cố định chỉ là ước lượng và có thể khác đáng kể so với tokenizer thực tế.
+> Chênh lệch với ước lượng ký tự/4: (190 − 116) / 116 ≈ 63,8% — sai lệch nặng hơn nhiều
+
+Vì sao tiếng Việt tốn nhiều token hơn:
+
+Dấu thanh và ký tự Unicode tổ hợp: Tiếng Việt dùng các ký tự có dấu nằm ngoài bảng chữ cái ASCII cơ bản — bộ mã hóa BPE của tiktoken được huấn luyện chủ yếu trên dữ liệu tiếng Anh, nên các ký tự/cụm ký tự này thường không có sẵn các token nguyên khối mà bị tách nhỏ thành nhiều token hơn (đôi khi từng byte UTF-8 một).
+Từ ghép không có khoảng trắng nội bộ, nhưng tách âm tiết bằng khoảng trắng. "Việt Nam", "sự thật" — mỗi âm tiết tiếng Việt đã được ngăn cách bằng dấu cách, khiến bộ đếm .split() (đếm theo từ) đánh giá thấp số đơn vị ngữ nghĩa thực tế so với cách encoder chia nhỏ theo byte/subword.
+Encoder được tối ưu cho tiếng Anh. Các token phổ biến trong tiếng Anh (like "the", "ing", "tion") có sẵn trong từ điển BPE dưới dạng 1 token, còn các âm tiết/cụm từ tiếng Việt phổ biến hiếm khi có vinh dự đó — nên trung bình mỗi ký tự/âm tiết tiếng Việt "tốn" nhiều token hơn ký tự tiếng Anh tương ứng.
 
 ---
 
@@ -102,7 +107,7 @@ với delay cố định giống nhau?**
 
 > _Câu trả lời của bạn_
 
-## Delay cố định khiến hàng nghìn client cùng gặp lỗi sẽ đồng loạt retry ở đúng cùng một thời điểm (ví dụ sau 1 giây), tạo ra một đợt sóng request y hệt đợt đầu dội thẳng vào server ngay khi nó vừa có cơ hội hồi phục, khiến sự cố lặp lại theo chu kỳ. So với delay cố định, exponential backoff tăng dần thời gian chờ sau mỗi lần thất bại, giúp giảm tần suất retry và cho API thêm thời gian phục hồi khi đang quá tải. Nếu hàng nghìn client cùng sử dụng delay cố định, chúng có thể retry đồng loạt sau cùng một khoảng thời gian và tạo ra một đợt tải lớn mới, khiến server tiếp tục quá tải. Tuy nhiên, exponential backoff một mình vẫn có thể khiến các client retry đồng bộ, vì vậy trong hệ thống thực tế thường kết hợp thêm **jitter** — một khoảng trễ ngẫu nhiên — để phân tán request theo thời gian.
+## Delay cố định khiến hàng nghìn client cùng gặp lỗi sẽ đồng loạt retry ở đúng cùng một thời điểm (ví dụ sau 1 giây), tạo ra một đợt sóng request y hệt đợt đầu dội thẳng vào server ngay khi nó vừa có cơ hội hồi phục, khiến sự cố lặp lại theo chu kỳ. Exponential backoff (0,1s → 0,2s → 0,4s...) giải quyết vấn đề này bằng cách giãn thời gian chờ tăng dần theo mỗi lần thất bại liên tiếp, giúp các lần retry tự nhiên trải rộng ra thay vì dồn cục, cho server nhiều khoảng thời gian hơn để phục hồi và giảm tổng tải dội vào cùng lúc. Tuy nhiên nếu nhiều client lỗi ở đúng cùng một khoảnh khắc, chuỗi delay của chúng vẫn đồng bộ với nhau — nên hệ thống thật thường cộng thêm jitter ngẫu nhiên để phá vỡ sự đồng bộ đó, phân tán request đều hơn theo thời gian.
 
 ## Block 4 — Mini-Project (trả lời sau Checkpoint 4)
 
