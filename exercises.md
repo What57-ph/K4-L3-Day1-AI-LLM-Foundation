@@ -63,7 +63,7 @@ Gọi `chat_with_system_prompt` hai lần với cùng câu hỏi
 > _Câu trả lời của bạn_
 > Với persona "giáo viên tiểu học", phản hồi thường ngắn hơn, dùng từ vựng đơn giản, tránh thuật ngữ kỹ thuật (thay "mã hóa", "phi tập trung" bằng ví dụ đời thường như "cuốn sổ mà ai cũng có một bản giống hệt nhau"), và hay dùng ví dụ cụ thể, gần gũi để minh họa. Với persona "chuyên gia tài chính", phản hồi thường dài và dày đặc thuật ngữ hơn (consensus, hash, sổ cái phân tán, smart contract), đi thẳng vào ứng dụng tài chính (giao dịch, DeFi, tính minh bạch).
 
-Điều này cho thấy system prompt không thay đổi sự thật mà model biết, mà thay đổi cách trình bày: nó định hình giọng văn, mức độ trừu tượng, và loại ví dụ được chọn vì system message được model coi là vai trò chỉ dẫn xuyên suốt, chi phối cách nó lọc và diễn đạt lại cùng một kiến thức nền cho từng đối tượng khác nhau.
+> Điều này cho thấy system prompt không thay đổi sự thật mà model biết, mà thay đổi cách trình bày: nó định hình giọng văn, mức độ trừu tượng, và loại ví dụ được chọn vì system message được model coi là vai trò chỉ dẫn xuyên suốt, chi phối cách nó lọc và diễn đạt lại cùng một kiến thức nền cho từng đối tượng khác nhau.
 
 ### Câu 2.2 — tiktoken vs đếm từ
 
